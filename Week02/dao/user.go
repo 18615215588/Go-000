@@ -3,6 +3,7 @@ package dao
 import (
 	"database/sql"
 	"errors"
+	"log"
 
 	errs "github.com/pkg/errors"
 )
@@ -29,7 +30,8 @@ func GetUserDetails(uid string) (*UserDetail, error) {
 	//模拟从数据库获取数据,会返回ErrNoRows错误
 	u, e := GetUserFromDB(uid)
 	if e != nil && errors.Is(e, sql.ErrNoRows) {
-		//没有记录，返回降级数据，吞掉错误信息
+		//没有记录, 记录日志,返回降级数据
+		log.Printf("norows error:%+v\n", errs.Wrap(e, "no user found"))
 		return &UserDetail{
 			"na",
 			"na",
